@@ -1,0 +1,10 @@
+/* 全部css: https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+
+:root {
+ /* 微信风格浅绿色调色板 */
+  --vp-c-indigo-1: #66bc8c;     /* 浅薄荷绿（导航栏/页脚主色） */
+  --vp-c-indigo-2: #4d9568;     /* 活力浅绿（按钮/图标主色） */
+  --vp-c-indigo-3: #69c08e;     /* 渐变过渡绿（边框/分割线） */
+  --vp-c-indigo-soft: rgba(158, 207, 150, 0.12); /* 半透明遮罩层 */
+
+}
