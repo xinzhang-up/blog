@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RabbitMQ实践 | 信长笔记2.0</title>
+    <meta name="description" content="信长笔记2.0">
+    <meta name="generator" content="VitePress v1.6.3">
+    <link rel="preload stylesheet" href="/assets/style.DpWYNj5v.css" as="style">
+    <link rel="preload stylesheet" href="/vp-icons.css" as="style">
+    
+    <script type="module" src="/assets/app.N4zux35G.js"></script>
+    <link rel="preload" href="/assets/inter-roman-latin.Di8DUHzh.woff2" as="font" type="font/woff2" crossorigin="">
+    <link rel="modulepreload" href="/assets/chunks/theme.Dxf0OmzB.js">
+    <link rel="modulepreload" href="/assets/chunks/framework.DPDPlp3K.js">
+    <link rel="modulepreload" href="/assets/04-缓存与中间件_0401-RabbitMQ_040103-RabbitMQ实践.md.CMlEeHBf.lean.js">
+    <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
+    <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
+  </head>
+  <body>
+    <div id="app"><div class="Layout" data-v-a9a9e638><!--[--><!--]--><!--[--><span tabindex="-1" data-v-492508fc></span><a href="#VPContent" class="VPSkipLink visually-hidden" data-v-492508fc>Skip to content</a><!--]--><!----><header class="VPNav" data-v-a9a9e638 data-v-f1e365da><div class="VPNavBar" data-v-f1e365da data-v-822684d1><div class="wrapper" data-v-822684d1><div class="container" data-v-822684d1><div class="title" data-v-822684d1><div class="VPNavBarTitle has-sidebar" data-v-822684d1 data-v-0f4f798b><a class="title" href="/" data-v-0f4f798b><!--[--><!--]--><!--[--><img class="VPImage logo" src="/avatar.jpg" alt data-v-35a7d0b8><!--]--><span data-v-0f4f798b>信长笔记2.0</span><!--[--><!--]--></a></div></div><div class="content" data-v-822684d1><div class="content-body" data-v-822684d1><!--[--><!--]--><div class="VPNavBarSearch search" data-v-822684d1><!--[--><!----><div id="local-search"><button type="button" class="DocSearch DocSearch-Button" aria-label="Search"><span class="DocSearch-Button-Container"><span class="vp-icon DocSearch-Search-Icon"></span><span class="DocSearch-Button-Placeholder">Search</span></span><span class="DocSearch-Button-Keys"><kbd class="DocSearch-Button-Key"></kbd><kbd class="DocSearch-Button-Key">K</kbd></span></button></div><!--]--></div><nav aria-labelledby="main-nav-aria-label" class="VPNavBarMenu menu" data-v-822684d1 data-v-e6d46098><span id="main-nav-aria-label" class="visually-hidden" data-v-e6d46098> Main Navigation </span><!--[--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/" tabindex="0" data-v-e6d46098 data-v-956ec74c><!--[--><span data-v-956ec74c>首页</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/%E5%85%B3%E4%BA%8E%E6%88%91.html" tabindex="0" data-v-e6d46098 data-v-956ec74c><!--[--><span data-v-956ec74c>关于我</span><!--]--></a><!--]--><!--]--></nav><!----><div class="VPNavBarAppearance appearance" data-v-822684d1 data-v-af096f4a><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-af096f4a data-v-e40a8bb6 data-v-4a1c76db><span class="check" data-v-4a1c76db><span class="icon" data-v-4a1c76db><!--[--><span class="vpi-sun sun" data-v-e40a8bb6></span><span class="vpi-moon moon" data-v-e40a8bb6></span><!--]--></span></span></button></div><div class="VPSocialLinks VPNavBarSocialLinks social-links" data-v-822684d1 data-v-164c457f data-v-ee7a9424><!--[--><a class="VPSocialLink no-icon" href="https://github.com/vuejs/vitepress" aria-label="github" target="_blank" rel="noopener" data-v-ee7a9424 data-v-d26d30cb><span class="vpi-social-github"></span></a><!--]--></div><div class="VPFlyout VPNavBarExtra extra" data-v-822684d1 data-v-925effce data-v-04f5c5e9><button type="button" class="button" aria-haspopup="true" aria-expanded="false" aria-label="extra navigation" data-v-04f5c5e9><span class="vpi-more-horizontal icon" data-v-04f5c5e9></span></button><div class="menu" data-v-04f5c5e9><div class="VPMenu" data-v-04f5c5e9 data-v-7dd3104a><!----><!--[--><!--[--><!----><div class="group" data-v-925effce><div class="item appearance" data-v-925effce><p class="label" data-v-925effce>Appearance</p><div class="appearance-action" data-v-925effce><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-925effce data-v-e40a8bb6 data-v-4a1c76db><span class="check" data-v-4a1c76db><span class="icon" data-v-4a1c76db><!--[--><span class="vpi-sun sun" data-v-e40a8bb6></span><span class="vpi-moon moon" data-v-e40a8bb6></span><!--]--></span></span></button></div></div></div><div class="group" data-v-925effce><div class="item social-links" data-v-925effce><div class="VPSocialLinks social-links-list" data-v-925effce data-v-ee7a9424><!--[--><a class="VPSocialLink no-icon" href="https://github.com/vuejs/vitepress" aria-label="github" target="_blank" rel="noopener" data-v-ee7a9424 data-v-d26d30cb><span class="vpi-social-github"></span></a><!--]--></div></div></div><!--]--><!--]--></div></div></div><!--[--><!--]--><button type="button" class="VPNavBarHamburger hamburger" aria-label="mobile navigation" aria-expanded="false" aria-controls="VPNavScreen" data-v-822684d1 data-v-5dea55bf><span class="container" data-v-5dea55bf><span class="top" data-v-5dea55bf></span><span class="middle" data-v-5dea55bf></span><span class="bottom" data-v-5dea55bf></span></span></button></div></div></div></div><div class="divider" data-v-822684d1><div class="divider-line" data-v-822684d1></div></div></div><!----></header><div class="VPLocalNav has-sidebar empty" data-v-a9a9e638 data-v-070ab83d><div class="container" data-v-070ab83d><button class="menu" aria-expanded="false" aria-controls="VPSidebarNav" data-v-070ab83d><span class="vpi-align-left menu-icon" data-v-070ab83d></span><span class="menu-text" data-v-070ab83d>Menu</span></button><div class="VPLocalNavOutlineDropdown" style="--vp-vh:0px;" data-v-070ab83d data-v-168ddf5d><button data-v-168ddf5d>Return to top</button><!----></div></div></div><aside class="VPSidebar" data-v-a9a9e638 data-v-18756405><div class="curtain" data-v-18756405></div><nav class="nav" id="VPSidebarNav" aria-labelledby="sidebar-aria-label" tabindex="-1" data-v-18756405><span class="visually-hidden" id="sidebar-aria-label" data-v-18756405> Sidebar Navigation </span><!--[--><!--]--><!--[--><div class="no-transition group" data-v-9e426adc><div class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><p class="text" data-v-a4b0d9bf>计算机基础</p><!----></div><!----></div></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>Java语言基础</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>Java核心知识点</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/02-Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/0201-Java%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/020101-Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>Java语言基础</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/02-Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/0201-Java%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/020102-IO%E6%A8%A1%E5%9E%8B.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>IO模型</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/02-Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/0201-Java%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/020103-%E9%9B%86%E5%90%88.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>集合</p><!--]--></a><!----></div><!----></div><!--]--></div></section><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>JVM</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/02-Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/0203-JVM/020301-JVM%E5%9F%BA%E7%A1%80.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>JVM基础</p><!--]--></a><!----></div><!----></div><!--]--></div></section><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>数据库与持久化</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>关系型数据库</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/03-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8C%96/0301-%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93/030101-PowerDesign%E7%AE%80%E6%98%93%E6%95%99%E7%A8%8B.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>PowerDesign简易教程</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/03-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8C%96/0301-%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93/030102-%E7%B4%A2%E5%BC%95.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>索引</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/03-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E6%8C%81%E4%B9%85%E5%8C%96/0301-%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93/030103-MySQL%E5%9F%BA%E7%A1%80.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>MySQL基础</p><!--]--></a><!----></div><!----></div><!--]--></div></section><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0 has-active" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>缓存与中间件</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><section class="VPSidebarItem level-1 collapsible collapsed has-active" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>RabbitMQ</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0401-RabbitMQ/040101-RabbitMQ%E5%9F%BA%E7%A1%80(%E4%B8%80).html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>RabbitMQ基础(一)</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0401-RabbitMQ/040102-RabbitMQ%E5%9F%BA%E7%A1%80(%E4%BA%8C).html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>RabbitMQ基础(二)</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0401-RabbitMQ/040103-RabbitMQ%E5%AE%9E%E8%B7%B5.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>RabbitMQ实践</p><!--]--></a><!----></div><!----></div><!--]--></div></section><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>RocketMQ</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0402-RocketMQ/040201-RockectMQ%E5%9F%BA%E7%A1%80.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>RockectMQ基础</p><!--]--></a><!----></div><!----></div><!--]--></div></section><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>Redis</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0403-Redis/040301-[%E6%A1%88%E4%BE%8B]%E6%99%BA%E8%83%BD%E4%BD%93session%E8%AE%BE%E8%AE%A1.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>[案例]智能体session设计</p><!--]--></a><!----></div><!----></div><!--]--></div></section><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>微服务与分布式系统</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>微服务</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0501-%E5%BE%AE%E6%9C%8D%E5%8A%A1/050101-RateLimiter.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>RateLimiter</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0501-%E5%BE%AE%E6%9C%8D%E5%8A%A1/050102-Filter&amp;Interceptor&amp;Aspect%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>Filter&Interceptor&Aspect使用场景</p><!--]--></a><!----></div><!----></div><!--]--></div></section><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>分布式</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050201-%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>分布式理论</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050202-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>服务注册与发现</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050203-%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>客户端负载均衡</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050204-%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99%E4%BF%9D%E6%8A%A4.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>服务容错保护</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050205-%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>声明式服务调用</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050206-API%E7%BD%91%E5%85%B3%E6%9C%8D%E5%8A%A1.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>API网关服务</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050207-%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>分布式配置中心</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050208-%E5%88%86%E5%B8%83%E5%BC%8F%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>分布式链路追踪</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/05-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/0502-%E5%88%86%E5%B8%83%E5%BC%8F/050209-%E9%98%BF%E9%87%8C%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E6%8A%80%E6%9C%AF%E7%99%BD%E7%9A%AE%E4%B9%A6.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>阿里微服务治理技术白皮书</p><!--]--></a><!----></div><!----></div><!--]--></div></section><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>架构设计与开发规范</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>设计模式</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0601-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/060101-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>面向对象与设计原则</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0601-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/060102-%E8%A7%84%E8%8C%83%E4%B8%8E%E9%87%8D%E6%9E%84.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>规范与重构</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0601-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/060103-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>设计模式-创建型</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0601-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/060104-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>设计模式-结构型</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0601-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/060105-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B(%E4%B8%8A).html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>设计模式-行为型(上)</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0601-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/060106-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B(%E4%B8%8B).html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>设计模式-行为型(下)</p><!--]--></a><!----></div><!----></div><!--]--></div></section><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>业务建模</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/06-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/0603-%E4%B8%9A%E5%8A%A1%E5%BB%BA%E6%A8%A1/060301-%E4%B8%9A%E5%8A%A1%E5%BB%BA%E6%A8%A1%E5%9F%BA%E7%A1%80.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>业务建模基础</p><!--]--></a><!----></div><!----></div><!--]--></div></section><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><div class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><p class="text" data-v-a4b0d9bf>开发工具与DevOps</p><!----></div><!----></div></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>前沿技术与扩展领域</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><section class="VPSidebarItem level-1 collapsible collapsed" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h3 class="text" data-v-a4b0d9bf>人工智能</h3><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-a4b0d9bf><span class="vpi-chevron-right caret-icon" data-v-a4b0d9bf></span></div></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/08-%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%89%A9%E5%B1%95%E9%A2%86%E5%9F%9F/0801-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/080101-GPT%E5%8E%9F%E7%90%86.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>GPT原理</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-2 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/08-%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF%E4%B8%8E%E6%89%A9%E5%B1%95%E9%A2%86%E5%9F%9F/0801-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/080102-RAG%E4%BC%98%E5%8C%96.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>RAG优化</p><!--]--></a><!----></div><!----></div><!--]--></div></section><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>实战与问题排查</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/09-%E5%AE%9E%E6%88%98%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/0901-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E7%83%AD%E5%88%B7%E5%90%8E%E6%97%A0%E6%B3%95%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>微服务配置热刷后无法处理请求问题</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/09-%E5%AE%9E%E6%88%98%E4%B8%8E%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/0902-%E4%BF%A1%E9%95%BF%E5%8D%9A%E5%AE%A2%E7%AB%99%E6%90%AD%E5%BB%BA.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>信长博客站搭建</p><!--]--></a><!----></div><!----></div><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>其他</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><!----><!----></div><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><!----><!----></div><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><section class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><div class="item" role="button" tabindex="0" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><h2 class="text" data-v-a4b0d9bf>杂学</h2><!----></div><div class="items" data-v-a4b0d9bf><!--[--><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/11-%E6%9D%82%E5%AD%A6/1101-%E7%BE%BD%E6%AF%9B%E7%90%83%E7%BB%83%E4%B9%A0%E5%BF%83%E5%BE%97.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>羽毛球练习心得</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/11-%E6%9D%82%E5%AD%A6/1102-%E8%8A%AF%E7%89%87.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>芯片</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-a4b0d9bf data-v-a4b0d9bf><div class="item" data-v-a4b0d9bf><div class="indicator" data-v-a4b0d9bf></div><a class="VPLink link link" href="/11-%E6%9D%82%E5%AD%A6/1103-%E4%BF%A1%E9%95%BF%E5%8E%A8%E6%88%BF.html" data-v-a4b0d9bf><!--[--><p class="text" data-v-a4b0d9bf>信长厨房</p><!--]--></a><!----></div><!----></div><!--]--></div></section></div><div class="no-transition group" data-v-9e426adc><div class="VPSidebarItem level-0" data-v-9e426adc data-v-a4b0d9bf><!----><!----></div></div><!--]--><!--[--><!--]--></nav></aside><div class="VPContent has-sidebar" id="VPContent" data-v-a9a9e638 data-v-91765379><div class="VPDoc has-sidebar has-aside" data-v-91765379 data-v-83890dd9><!--[--><!--]--><div class="container" data-v-83890dd9><div class="aside" data-v-83890dd9><div class="aside-curtain" data-v-83890dd9></div><div class="aside-container" data-v-83890dd9><div class="aside-content" data-v-83890dd9><div class="VPDocAside" data-v-83890dd9 data-v-6d7b3c46><!--[--><!--]--><!--[--><!--]--><nav aria-labelledby="doc-outline-aria-label" class="VPDocAsideOutline" data-v-6d7b3c46 data-v-b38bf2ff><div class="content" data-v-b38bf2ff><div class="outline-marker" data-v-b38bf2ff></div><div aria-level="2" class="outline-title" id="doc-outline-aria-label" role="heading" data-v-b38bf2ff>On this page</div><ul class="VPDocOutlineItem root" data-v-b38bf2ff data-v-3f927ebe><!--[--><!--]--></ul></div></nav><!--[--><!--]--><div class="spacer" data-v-6d7b3c46></div><!--[--><!--]--><!----><!--[--><!--]--><!--[--><!--]--></div></div></div></div><div class="content" data-v-83890dd9><div class="content-container" data-v-83890dd9><!--[--><!--]--><main class="main" data-v-83890dd9><div style="position:relative;" class="vp-doc _04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6_0401-RabbitMQ_040103-RabbitMQ%E5%AE%9E%E8%B7%B5" data-v-83890dd9><div><h1 id="rabbitmq实践" tabindex="-1">RabbitMQ实践 <a class="header-anchor" href="#rabbitmq实践" aria-label="Permalink to &quot;RabbitMQ实践&quot;">​</a></h1><p>示例项目地址: <a href="https://git.code.tencent.com/xinzhang0618/oa2.git" target="_blank" rel="noreferrer">https://git.code.tencent.com/xinzhang0618/oa2.git</a> feature/xinzhang_rabbitmq分支 参考文档: mq概念(这俩篇必读): <a href="https://www.yuque.com/fvy7xd/xinzhang/toi6on" target="_blank" rel="noreferrer">https://www.yuque.com/fvy7xd/xinzhang/toi6on</a><a href="https://www.yuque.com/fvy7xd/xinzhang/if5xfk" target="_blank" rel="noreferrer">https://www.yuque.com/fvy7xd/xinzhang/if5xfk</a> **延时队列: **<a href="https://zhuanlan.zhihu.com/p/130417736" target="_blank" rel="noreferrer">https://zhuanlan.zhihu.com/p/130417736</a> **基本使用: **<a href="https://zhuanlan.zhihu.com/p/265732383" target="_blank" rel="noreferrer">https://zhuanlan.zhihu.com/p/265732383</a></p><h2 id="思路" tabindex="-1">思路 <a class="header-anchor" href="#思路" aria-label="Permalink to &quot;思路&quot;">​</a></h2><p>rabbitmq的玩法比较丰富, 包括但不限于: 异步, 微服务通信, 多线程处理提高性能, 延时等. **难点在于一是本身的概念配置丰富, 二是不同的业务场景玩法比较花, 本篇着重于梳理mq的最佳简易配置, 并指出各功能点针对的应用场景. ** 在看本篇之前, 建议熟悉rabbitmq中概念, 并熟悉基本使用.</p><h2 id="解析" tabindex="-1">解析 <a class="header-anchor" href="#解析" aria-label="Permalink to &quot;解析&quot;">​</a></h2><p>部署略, 注意:</p><ol><li>需要添加管理界面用户</li><li>启动管理插件</li><li>安装并启用死信交换机插件</li><li>当exchange/queue为durable时,** 若有配置变更, 需要删掉原来的使程序重新生成**</li></ol><p><strong>常用命令</strong></p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>- rabbitmqctl </span></span>
+<span class="line"><span>rabbitmqctl --help 查看帮助</span></span>
+<span class="line"><span>rabbitmqctl status 查看状态</span></span>
+<span class="line"><span>rabbitmqctl shutdown/stop/stop_app 停止</span></span>
+<span class="line"><span>rabbitmqctl start_app 启动</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>- rabbitmq-plugins  </span></span>
+<span class="line"><span>rabbitmq-plugins --help 查看帮助</span></span>
+<span class="line"><span>rabbitmq-plugins list 查看插件列表</span></span>
+<span class="line"><span>rabbitmq-plugins enable &lt;pluginName&gt; 启用插件</span></span>
+<span class="line"><span>rabbitmq-plugins disable &lt;pluginName&gt; 禁用插件</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>部署补充:</span></span>
+<span class="line"><span>1.需启用管理插件, rabbitmq_plugins enable rabbitmq_management</span></span>
+<span class="line"><span>2.需安装并启用死信交换机插件 </span></span>
+<span class="line"><span>- 上 https://www.rabbitmq.com/community-plugins.html 找 rabbitmq_delayed_message_exchange</span></span>
+<span class="line"><span>- 下载rabbitmq_delayed_message_exchange-3.8.0.ez扔到/usr/lib/rabbitmq/plugins/下</span></span>
+<span class="line"><span>- 启用rabbitmq-plusgins enable rabbitmq_delayed_message_exchange</span></span></code></pre></div><h3 id="配置" tabindex="-1">配置 <a class="header-anchor" href="#配置" aria-label="Permalink to &quot;配置&quot;">​</a></h3><p>注: 示例项目为单体多模块, 交换机都使用topic类型, 项目结构如下图</p><h4 id="依赖" tabindex="-1">依赖 <a class="header-anchor" href="#依赖" aria-label="Permalink to &quot;依赖&quot;">​</a></h4><p>oa-core, oa-consumer, oa-biz三个模块都需配置</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span> &lt;dependency&gt;</span></span>
+<span class="line"><span>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span></span>
+<span class="line"><span>            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span></span>
+<span class="line"><span>        &lt;/dependency&gt;</span></span>
+<span class="line"><span>        &lt;dependency&gt;</span></span>
+<span class="line"><span>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span></span>
+<span class="line"><span>            &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;</span></span>
+<span class="line"><span>        &lt;/dependency&gt;</span></span>
+<span class="line"><span>        &lt;dependency&gt;</span></span>
+<span class="line"><span>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span></span>
+<span class="line"><span>            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;</span></span>
+<span class="line"><span>        &lt;/dependency&gt;</span></span>
+<span class="line"><span>        &lt;dependency&gt;</span></span>
+<span class="line"><span>            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span></span>
+<span class="line"><span>            &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span></span>
+<span class="line"><span>        &lt;/dependency&gt;</span></span></code></pre></div><h4 id="基础配置" tabindex="-1">基础配置 <a class="header-anchor" href="#基础配置" aria-label="Permalink to &quot;基础配置&quot;">​</a></h4><p>以下配置都在oa-core模块下, 这部分主要是对mq的通用配置以及template的封装</p><p>Message抽象类, 包含优先级, 延迟分钟, 租户等属性, 具体实现类需要指定交换机以及路由key</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import top.xinzhang0618.oa.BizContext;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * MQ消息抽象类 实现类需要提供消息发送的exchange，避免发送到默认exchange 实现类需要提供消息的routingKey，用于消息路由</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public abstract class Message {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 优先级</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    private Integer priority;</span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 延迟分钟</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    private Integer delayMinutes;</span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 租户ID</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    private Long tenantId;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public Message() {</span></span>
+<span class="line"><span>        this.tenantId = BizContext.getTenantId();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public Long getTenantId() {</span></span>
+<span class="line"><span>        return tenantId;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public void setTenantId(Long tenantId) {</span></span>
+<span class="line"><span>        this.tenantId = tenantId;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public Integer getPriority() {</span></span>
+<span class="line"><span>        return priority;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public void setPriority(Integer priority) {</span></span>
+<span class="line"><span>        this.priority = priority;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public Integer getDelayMinutes() {</span></span>
+<span class="line"><span>        return delayMinutes;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public void setDelayMinutes(Integer delayMinutes) {</span></span>
+<span class="line"><span>        this.delayMinutes = delayMinutes;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 返回消息对应的路由器</span></span>
+<span class="line"><span>     *</span></span>
+<span class="line"><span>     * @return ExchangeName</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    public String exchange() {</span></span>
+<span class="line"><span>        return &quot;oa&quot;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 返回消息路由键</span></span>
+<span class="line"><span>     *</span></span>
+<span class="line"><span>     * @return RoutingKey</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    public abstract String routingKey();</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String toString() {</span></span>
+<span class="line"><span>        return &quot;Message{&quot; +</span></span>
+<span class="line"><span>                &quot;priority=&quot; + priority +</span></span>
+<span class="line"><span>                &quot;, delayMinutes=&quot; + delayMinutes +</span></span>
+<span class="line"><span>                &quot;, tenantId=&quot; + tenantId +</span></span>
+<span class="line"><span>                &#39;}&#39;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>MqProducer消息发布接口</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import java.util.Collection;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * 消息生产者.</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public interface MqProducer {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  /**</span></span>
+<span class="line"><span>   * 发送消息.</span></span>
+<span class="line"><span>   */</span></span>
+<span class="line"><span>  void send(Message message);</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  /**</span></span>
+<span class="line"><span>   * 批量发送消息.</span></span>
+<span class="line"><span>   */</span></span>
+<span class="line"><span>  void send(Collection&lt;? extends Message&gt; messages);</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>RabbitMqProducer, rabbitmq消息发布的实现 注意: 这里包装了一层SpringEvent来处理mq事务(是否性能更佳存疑...) rabbbitmq的事务: <a href="https://blog.csdn.net/u013256816/article/details/55515234" target="_blank" rel="noreferrer">https://blog.csdn.net/u013256816/article/details/55515234</a> applicationEvent事务: <a href="https://blog.csdn.net/crowhyc/article/details/96433001" target="_blank" rel="noreferrer">https://blog.csdn.net/crowhyc/article/details/96433001</a> rabbitmq原生事务性能差, 因此不用; ApplicationEvent的消费端注解@TransactionalEventListener默认绑定的监听阶段是 TransactionPhase.AFTER_COMMIT即事务提交后, 如果事务回滚了, 消费端是接收不到消息的.</p><p>同时, 也aplicationEvent也解决了&quot;生产端事务未提交, 消费端从数据库中查不到数据&quot;这一问题</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.core.RabbitTemplate;</span></span>
+<span class="line"><span>import org.springframework.beans.factory.annotation.Autowired;</span></span>
+<span class="line"><span>import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;</span></span>
+<span class="line"><span>import org.springframework.context.ApplicationEventPublisher;</span></span>
+<span class="line"><span>import org.springframework.stereotype.Component;</span></span>
+<span class="line"><span>import org.springframework.transaction.event.TransactionalEventListener;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.Assert;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import javax.annotation.Resource;</span></span>
+<span class="line"><span>import java.util.Collection;</span></span>
+<span class="line"><span>import java.util.List;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * 消息模板包装类.</span></span>
+<span class="line"><span> * 这里利用applicationEvent的事务来取代rabbitmq的事务</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>@Component</span></span>
+<span class="line"><span>@ConditionalOnBean(RabbitTemplate.class)</span></span>
+<span class="line"><span>public class RabbitMqProducer implements MqProducer {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Autowired</span></span>
+<span class="line"><span>    private ApplicationEventPublisher applicationEventPublisher;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 发送消息.</span></span>
+<span class="line"><span>     *</span></span>
+<span class="line"><span>     * @param message 消息</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public void send(Message message) {</span></span>
+<span class="line"><span>        applicationEventPublisher.publishEvent(new MessageSendingEvent(message.routingKey(), message));</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public void send(Collection&lt;? extends Message&gt; messages) {</span></span>
+<span class="line"><span>        messages.forEach(this::send);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Component</span></span>
+<span class="line"><span>    public static class RabbitMqMessageSender {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        @Resource</span></span>
+<span class="line"><span>        private RabbitTemplate rabbitTemplate;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        @TransactionalEventListener(fallbackExecution = true, classes = MessageSendingEvent.class)</span></span>
+<span class="line"><span>        public void sendMessage(MessageSendingEvent messageSendingEvent) {</span></span>
+<span class="line"><span>            List&lt;Message&gt; messages = messageSendingEvent.getMessages();</span></span>
+<span class="line"><span>            if (Assert.isEmpty(messages)) {</span></span>
+<span class="line"><span>                return;</span></span>
+<span class="line"><span>            }</span></span>
+<span class="line"><span>            send(messages);</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        private void send(Message message) {</span></span>
+<span class="line"><span>            if (message.getPriority() == null &amp;&amp; message.getDelayMinutes() == null) {</span></span>
+<span class="line"><span>                rabbitTemplate.convertAndSend(message.exchange(), message.routingKey(), message);</span></span>
+<span class="line"><span>                return;</span></span>
+<span class="line"><span>            }</span></span>
+<span class="line"><span>            rabbitTemplate.convertAndSend(message.exchange(), message.routingKey(), message, msg -&gt; {</span></span>
+<span class="line"><span>                if (message.getPriority() != null) {</span></span>
+<span class="line"><span>                    msg.getMessageProperties().setPriority(message.getPriority());</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                if (message.getDelayMinutes() != null) {</span></span>
+<span class="line"><span>                    msg.getMessageProperties().setDelay(1000 * 60 * message.getDelayMinutes());</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                return msg;</span></span>
+<span class="line"><span>            });</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        private void send(List&lt;Message&gt; messages) {</span></span>
+<span class="line"><span>            messages.forEach(this::send);</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>MessageSendingEvent, ApplicationEvent的实现</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import org.springframework.context.ApplicationEvent;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import java.util.Arrays;</span></span>
+<span class="line"><span>import java.util.List;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * 消息事件.</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class MessageSendingEvent extends ApplicationEvent {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  private final List&lt;Message&gt; messages;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  public MessageSendingEvent(Object source, Message... messages) {</span></span>
+<span class="line"><span>    super(source);</span></span>
+<span class="line"><span>    this.messages = Arrays.asList(messages);</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  public List&lt;Message&gt; getMessages() {</span></span>
+<span class="line"><span>    return messages;</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  @Override</span></span>
+<span class="line"><span>  public String toString() {</span></span>
+<span class="line"><span>    return &quot;MessageSendingEvent{&quot; +</span></span>
+<span class="line"><span>            &quot;messages=&quot; + messages +</span></span>
+<span class="line"><span>            &#39;}&#39;;</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>另外 BaseMqConfig, 整个项目的总交换机配置</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import org.springframework.amqp.core.TopicExchange;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.connection.ConnectionFactory;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.core.RabbitTemplate;</span></span>
+<span class="line"><span>import org.springframework.context.annotation.Bean;</span></span>
+<span class="line"><span>import org.springframework.context.annotation.Configuration;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 14:05</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>@Configuration</span></span>
+<span class="line"><span>public class BaseMqConfig {</span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 总交换机.</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    private static final String EXCHANGE_OA = &quot;oa&quot;;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * OA总交换机.</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public TopicExchange oaExchange() {</span></span>
+<span class="line"><span>        return new TopicExchange(EXCHANGE_OA);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {</span></span>
+<span class="line"><span>        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);</span></span>
+<span class="line"><span>        rabbitTemplate.setMessageConverter(new FastJson2JsonMessageConverter());</span></span>
+<span class="line"><span>        return rabbitTemplate;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>FastJson2JsonMessageConverter, 序列化转换器, 在BaseMqConfig的生产端rabbitTemplate的Bean中有配置, 消费端的factory也需要配置, 后文会提到</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import com.alibaba.fastjson.JSON;</span></span>
+<span class="line"><span>import org.springframework.amqp.core.Message;</span></span>
+<span class="line"><span>import org.springframework.amqp.core.MessageProperties;</span></span>
+<span class="line"><span>import org.springframework.amqp.support.converter.AbstractMessageConverter;</span></span>
+<span class="line"><span>import org.springframework.amqp.support.converter.ClassMapper;</span></span>
+<span class="line"><span>import org.springframework.amqp.support.converter.DefaultClassMapper;</span></span>
+<span class="line"><span>import org.springframework.amqp.support.converter.MessageConversionException;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 11:13</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class FastJson2JsonMessageConverter extends AbstractMessageConverter {</span></span>
+<span class="line"><span>    public static final String DEFAULT_CHARSET = &quot;UTF-8&quot;;</span></span>
+<span class="line"><span>    public static final String DEFAULT_CONTENT_TYPE = &quot;application/json&quot;;</span></span>
+<span class="line"><span>    private static final ClassMapper CLASS_MAPPER = new FastJson2JsonMessageConverter.FastJsonClassMapper();</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public FastJson2JsonMessageConverter() {</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public ClassMapper getClassMapper() {</span></span>
+<span class="line"><span>        return CLASS_MAPPER;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    protected Message createMessage(Object object, MessageProperties messageProperties) {</span></span>
+<span class="line"><span>        byte[] bytes = JSON.toJSONBytes(object);</span></span>
+<span class="line"><span>        messageProperties.setContentType(DEFAULT_CONTENT_TYPE);</span></span>
+<span class="line"><span>        messageProperties.setContentEncoding(DEFAULT_CHARSET);</span></span>
+<span class="line"><span>        messageProperties.setContentLength(bytes.length);</span></span>
+<span class="line"><span>        this.getClassMapper().fromClass(object.getClass(), messageProperties);</span></span>
+<span class="line"><span>        return new Message(bytes, messageProperties);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public Object fromMessage(Message message) throws MessageConversionException {</span></span>
+<span class="line"><span>        Object content = null;</span></span>
+<span class="line"><span>        MessageProperties properties = message.getMessageProperties();</span></span>
+<span class="line"><span>        if (properties != null) {</span></span>
+<span class="line"><span>            String contentType = properties.getContentType();</span></span>
+<span class="line"><span>            if (DEFAULT_CONTENT_TYPE.equals(contentType)) {</span></span>
+<span class="line"><span>                Class&lt;?&gt; targetClass = this.getClassMapper().toClass(message.getMessageProperties());</span></span>
+<span class="line"><span>                content = JSON.parseObject(message.getBody(), targetClass);</span></span>
+<span class="line"><span>            }</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        if (content == null) {</span></span>
+<span class="line"><span>            content = message.getBody();</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>        return content;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public static class FastJsonClassMapper extends DefaultClassMapper {</span></span>
+<span class="line"><span>        public FastJsonClassMapper() {</span></span>
+<span class="line"><span>            this.setTrustedPackages(&quot;*&quot;);</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="消费端配置" tabindex="-1">消费端配置 <a class="header-anchor" href="#消费端配置" aria-label="Permalink to &quot;消费端配置&quot;">​</a></h4><p>以下配置在oa-consumer模块, 这部分主要是对rabbitmq监听容器的配置</p><p>配置文件</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>spring:</span></span>
+<span class="line"><span>	rabbitmq:</span></span>
+<span class="line"><span>    host: 47.94.148.180</span></span>
+<span class="line"><span>    port: 5672</span></span>
+<span class="line"><span>    username: bite</span></span>
+<span class="line"><span>    password: bite</span></span>
+<span class="line"><span>    virtual-host: xinzhang</span></span>
+<span class="line"><span>oa:</span></span>
+<span class="line"><span>  consumer:</span></span>
+<span class="line"><span>    demo:</span></span>
+<span class="line"><span>      exchange:</span></span>
+<span class="line"><span>        concurrent: 5</span></span>
+<span class="line"><span>        maxConcurrent: 10</span></span></code></pre></div><p>启动类添加注解</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>@EnableAsync</span></span>
+<span class="line"><span>@EnableRabbit</span></span>
+<span class="line"><span>@SpringBootApplication(scanBasePackages = &quot;top.xinzhang0618.oa&quot;)</span></span>
+<span class="line"><span>public class ConsumerApplication {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public static void main(String[] args) {</span></span>
+<span class="line"><span>        SpringApplication.run(ConsumerApplication.class, args);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>ConsumerConfig, 消费端factory配置 注意: 核心参数是prefetchCount, concurrent, maxConcurrent, 后两个从配置文件中读取 factory配置了fastJson序列化 (confirm默认关闭, ack默认开启)这里开启了手动ack, 正常场景直接自动ack就行, ack的应用场景下文会特别提到</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.config;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import org.springframework.amqp.core.AcknowledgeMode;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.connection.ConnectionFactory;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;</span></span>
+<span class="line"><span>import org.springframework.beans.factory.annotation.Value;</span></span>
+<span class="line"><span>import org.springframework.context.annotation.Bean;</span></span>
+<span class="line"><span>import org.springframework.context.annotation.Configuration;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.FastJson2JsonMessageConverter;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 15:27</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>@Configuration</span></span>
+<span class="line"><span>public class ConsumerConfig {</span></span>
+<span class="line"><span>    @Value(&quot;${oa.consumer.demo.exchange.concurrent:1}&quot;)</span></span>
+<span class="line"><span>    private Integer concurrent;</span></span>
+<span class="line"><span>    @Value(&quot;${oa.consumer.demo.exchange.maxConcurrent:1}&quot;)</span></span>
+<span class="line"><span>    private Integer maxConcurrent;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public RabbitListenerContainerFactory&lt;?&gt; rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {</span></span>
+<span class="line"><span>        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();</span></span>
+<span class="line"><span>        factory.setConnectionFactory(connectionFactory);</span></span>
+<span class="line"><span>        factory.setMessageConverter(new FastJson2JsonMessageConverter());</span></span>
+<span class="line"><span>        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);</span></span>
+<span class="line"><span>        // 参考: https://www.cnblogs.com/throwable/p/13834465.html</span></span>
+<span class="line"><span>        // prefetchCount表示手动ack情况下队列未ack的预取或说阻塞的消息的最大数, 该参数用来使消费端负载均衡, 默认250, 官方推荐30</span></span>
+<span class="line"><span>        factory.setPrefetchCount(30);</span></span>
+<span class="line"><span>        // 并发消费者数, 即开多线程消费, 比如2个consumer则默认单线程即2个channel, 将concurrent设置为5后, 变为10个channel</span></span>
+<span class="line"><span>        factory.setConcurrentConsumers(concurrent);</span></span>
+<span class="line"><span>        factory.setMaxConcurrentConsumers(maxConcurrent);</span></span>
+<span class="line"><span>        return factory;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>AbstractConsumer, consumer基类 作用: 1. 做统一异常以及日志处理; 2. 做手动ack等</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.consumer;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import com.alibaba.fastjson.JSON;</span></span>
+<span class="line"><span>import com.rabbitmq.client.Channel;</span></span>
+<span class="line"><span>import org.slf4j.Logger;</span></span>
+<span class="line"><span>import org.slf4j.LoggerFactory;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.Message;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import java.io.IOException;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/19 13:59</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public abstract class AbstractConsumer {</span></span>
+<span class="line"><span>    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractConsumer.class);</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    protected &lt;T extends Message&gt; void run(T message, final Channel channel, long tag,</span></span>
+<span class="line"><span>                                           Runnable runnable) throws IOException {</span></span>
+<span class="line"><span>        try {</span></span>
+<span class="line"><span>            if (LOGGER.isDebugEnabled()) {</span></span>
+<span class="line"><span>                LOGGER.debug(&quot;{}处理消息：{}&quot;, this.getClass().getName(), message);</span></span>
+<span class="line"><span>            }</span></span>
+<span class="line"><span>            runnable.run();</span></span>
+<span class="line"><span>            channel.basicAck(tag, false);</span></span>
+<span class="line"><span>        } catch (Exception e) {</span></span>
+<span class="line"><span>            LOGGER.error(&quot;消息处理异常！{},{}&quot;, this.getClass().getName(), JSON.toJSONString(message));</span></span>
+<span class="line"><span>            LOGGER.error(&quot;消息处理异常！&quot;, e);</span></span>
+<span class="line"><span>            channel.basicReject(tag, false);</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>消费者示例 Test1Consumer</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.consumer;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import com.alibaba.fastjson.JSON;</span></span>
+<span class="line"><span>import com.rabbitmq.client.Channel;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.annotation.RabbitHandler;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.annotation.RabbitListener;</span></span>
+<span class="line"><span>import org.springframework.amqp.support.AmqpHeaders;</span></span>
+<span class="line"><span>import org.springframework.messaging.handler.annotation.Header;</span></span>
+<span class="line"><span>import org.springframework.stereotype.Component;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.demo.MqConstants;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.demo.TestMessage1;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.demo.TestMessage3;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import java.io.IOException;</span></span>
+<span class="line"><span>import java.time.LocalDateTime;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 15:10</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>@Component</span></span>
+<span class="line"><span>@RabbitListener(queues = MqConstants.QUEUE_TEST1)</span></span>
+<span class="line"><span>public class Test1Consumer extends AbstractConsumer {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @RabbitHandler(isDefault = true)</span></span>
+<span class="line"><span>    public void test(TestMessage1 testMessage1, Channel channel,</span></span>
+<span class="line"><span>                     @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {</span></span>
+<span class="line"><span>        run(testMessage1, channel, tag, () -&gt; {</span></span>
+<span class="line"><span>            System.out.println(&quot;test1队列收到消息了, 消息内容为: &quot; + JSON.toJSON(testMessage1) + &quot;, 消息接收时间为: &quot; + LocalDateTime.now());</span></span>
+<span class="line"><span>        });</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @RabbitHandler</span></span>
+<span class="line"><span>    public void test3(TestMessage3 testMessage3, Channel channel,</span></span>
+<span class="line"><span>                      @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {</span></span>
+<span class="line"><span>        run(testMessage3, channel, tag, () -&gt; {</span></span>
+<span class="line"><span>            System.out.println(&quot;test1队列收到消息了, 消息内容为: &quot; + JSON.toJSON(testMessage3) + &quot;, 消息接收时间为: &quot; + LocalDateTime.now());</span></span>
+<span class="line"><span>        });</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>Test2Consumer</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.consumer;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import com.alibaba.fastjson.JSON;</span></span>
+<span class="line"><span>import com.rabbitmq.client.Channel;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.annotation.RabbitHandler;</span></span>
+<span class="line"><span>import org.springframework.amqp.rabbit.annotation.RabbitListener;</span></span>
+<span class="line"><span>import org.springframework.amqp.support.AmqpHeaders;</span></span>
+<span class="line"><span>import org.springframework.messaging.handler.annotation.Header;</span></span>
+<span class="line"><span>import org.springframework.stereotype.Component;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.demo.MqConstants;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.demo.TestMessage2;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import java.io.IOException;</span></span>
+<span class="line"><span>import java.time.LocalDateTime;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 15:10</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>@Component</span></span>
+<span class="line"><span>@RabbitListener(queues = MqConstants.QUEUE_TEST2)</span></span>
+<span class="line"><span>public class Test2Consumer extends AbstractConsumer {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @RabbitHandler</span></span>
+<span class="line"><span>    public void test(TestMessage2 testMessage2, Channel channel,</span></span>
+<span class="line"><span>                     @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {</span></span>
+<span class="line"><span>        run(testMessage2, channel, tag, () -&gt; {</span></span>
+<span class="line"><span>            System.out.println(&quot;test2队列收到消息了, 消息内容为: &quot; + JSON.toJSON(testMessage2) + &quot;, 消息接收时间为: &quot; + LocalDateTime.now());</span></span>
+<span class="line"><span>        });</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="业务端配置" tabindex="-1">业务端配置 <a class="header-anchor" href="#业务端配置" aria-label="Permalink to &quot;业务端配置&quot;">​</a></h4><p>以下配置在oa-biz模块, 这部分跟业务紧密相关, 主要是业务交换机以及队列的配置</p><p>示例配置 DemoMqConfig</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp.demo;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import org.springframework.amqp.core.*;</span></span>
+<span class="line"><span>import org.springframework.beans.factory.annotation.Qualifier;</span></span>
+<span class="line"><span>import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;</span></span>
+<span class="line"><span>import org.springframework.context.annotation.Bean;</span></span>
+<span class="line"><span>import org.springframework.context.annotation.Configuration;</span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.BaseMqConfig;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * 交换机配置</span></span>
+<span class="line"><span> *</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 14:35</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>@ConditionalOnBean(BaseMqConfig.class)</span></span>
+<span class="line"><span>@Configuration</span></span>
+<span class="line"><span>public class DemoMqConfig {</span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 示例交换机</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Exchange demoExchange() {</span></span>
+<span class="line"><span>        return ExchangeBuilder.topicExchange(MqConstants.EXCHANGE_DEMO).delayed().build();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 示例交换机绑定总交换机, routingKey: oa.demo.#</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Binding demoExchangeBindingOaExchange(@Qualifier(&quot;oaExchange&quot;) TopicExchange oaExchange,</span></span>
+<span class="line"><span>                                                 @Qualifier(&quot;demoExchange&quot;) Exchange demoExchange) {</span></span>
+<span class="line"><span>        return BindingBuilder.bind(demoExchange).to(oaExchange).with(MqConstants.EXCHANGE_DEMO_BINDING_KEY);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试1队列</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Queue test1Queue() {</span></span>
+<span class="line"><span>        return QueueBuilder.durable(MqConstants.QUEUE_TEST1).build();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试1队列 绑定 demo交换机, routingKey: oms.demo.test1</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Binding test1QueueBindingDemoExchange(@Qualifier(&quot;demoExchange&quot;) Exchange demoExchange,</span></span>
+<span class="line"><span>                                                 @Qualifier(&quot;test1Queue&quot;) Queue test1Queue) {</span></span>
+<span class="line"><span>        return BindingBuilder</span></span>
+<span class="line"><span>                .bind(test1Queue)</span></span>
+<span class="line"><span>                .to(demoExchange)</span></span>
+<span class="line"><span>                .with(MqConstants.QUEUE_TEST1_BINDING_KEY)</span></span>
+<span class="line"><span>                .noargs();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试2队列</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Queue test2Queue() {</span></span>
+<span class="line"><span>        return QueueBuilder.durable(MqConstants.QUEUE_TEST2).build();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试2队列 绑定 demo交换机, routingKey: oms.demo.test2</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Binding test2QueueBindingDemoExchange(@Qualifier(&quot;demoExchange&quot;) Exchange demoExchange,</span></span>
+<span class="line"><span>                                                 @Qualifier(&quot;test2Queue&quot;) Queue test1Queue) {</span></span>
+<span class="line"><span>        return BindingBuilder</span></span>
+<span class="line"><span>                .bind(test1Queue)</span></span>
+<span class="line"><span>                .to(demoExchange)</span></span>
+<span class="line"><span>                .with(MqConstants.QUEUE_TEST2_BINDING_KEY)</span></span>
+<span class="line"><span>                .noargs();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试3延时队列, 延迟10min</span></span>
+<span class="line"><span>     * 这个队列没有消费者, 消息过期后由死信交换机demo转发至oa.demo.test1</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Queue test3DelayQueue() {</span></span>
+<span class="line"><span>        return QueueBuilder</span></span>
+<span class="line"><span>                .durable(MqConstants.QUEUE_TEST3_DELAY)</span></span>
+<span class="line"><span>                .withArgument(&quot;x-dead-letter-exchange&quot;, MqConstants.EXCHANGE_DEMO)</span></span>
+<span class="line"><span>                .withArgument(&quot;x-dead-letter-routing-key&quot;, MqConstants.QUEUE_TEST1_BINDING_KEY)</span></span>
+<span class="line"><span>                .withArgument(&quot;x-message-ttl&quot;, 1000 * 60 * 10)</span></span>
+<span class="line"><span>                .build();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试3延时队列 绑定 demo交换机, routingKey: oms.demo.test3.delay</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Binding test3DelayQueueBindingDemoExchange(@Qualifier(&quot;demoExchange&quot;) Exchange demoExchange,</span></span>
+<span class="line"><span>                                                      @Qualifier(&quot;test3DelayQueue&quot;) Queue test3DelayQueue) {</span></span>
+<span class="line"><span>        return BindingBuilder</span></span>
+<span class="line"><span>                .bind(test3DelayQueue)</span></span>
+<span class="line"><span>                .to(demoExchange)</span></span>
+<span class="line"><span>                .with(MqConstants.QUEUE_TEST3_DELAY_BINDING_KEY)</span></span>
+<span class="line"><span>                .noargs();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>MqConstants</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp.demo;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/8 14:14</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class MqConstants {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 示例交换机.</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    public static final String EXCHANGE_DEMO = &quot;oa.demo&quot;;</span></span>
+<span class="line"><span>    public static final String EXCHANGE_DEMO_BINDING_KEY = &quot;oa.demo.#&quot;;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试队列1</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    public static final String QUEUE_TEST1 = &quot;oa.demo.test1&quot;;</span></span>
+<span class="line"><span>    public static final String QUEUE_TEST1_BINDING_KEY = &quot;oa.demo.test1&quot;;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试队列2</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    public static final String QUEUE_TEST2 = &quot;oa.demo.test2&quot;;</span></span>
+<span class="line"><span>    public static final String QUEUE_TEST2_BINDING_KEY = &quot;oa.demo.test2&quot;;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试队列3, 延时队列</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    public static final String QUEUE_TEST3_DELAY = &quot;oa.demo.test3.delay&quot;;</span></span>
+<span class="line"><span>    public static final String QUEUE_TEST3_DELAY_BINDING_KEY = &quot;oa.demo.test3.delay&quot;;</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>TestMessage1</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp.demo;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.Message;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/4 18:15</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class TestMessage1 extends Message {</span></span>
+<span class="line"><span>    private String msg;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String exchange() {</span></span>
+<span class="line"><span>        return super.exchange();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String routingKey() {</span></span>
+<span class="line"><span>        return &quot;oa.demo.test1&quot;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public String getMsg() {</span></span>
+<span class="line"><span>        return msg;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public void setMsg(String msg) {</span></span>
+<span class="line"><span>        this.msg = msg;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String toString() {</span></span>
+<span class="line"><span>        return &quot;TestMessage1{&quot; +</span></span>
+<span class="line"><span>                &quot;msg=&#39;&quot; + msg + &#39;\&#39;&#39; +</span></span>
+<span class="line"><span>                &#39;}&#39;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>TestMessage2</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp.demo;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.Message;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/4 18:15</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class TestMessage2 extends Message {</span></span>
+<span class="line"><span>    private String msg;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String exchange() {</span></span>
+<span class="line"><span>        return super.exchange();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String routingKey() {</span></span>
+<span class="line"><span>        return &quot;oa.demo.test2&quot;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public String getMsg() {</span></span>
+<span class="line"><span>        return msg;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public void setMsg(String msg) {</span></span>
+<span class="line"><span>        this.msg = msg;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String toString() {</span></span>
+<span class="line"><span>        return &quot;TestMessage2{&quot; +</span></span>
+<span class="line"><span>                &quot;msg=&#39;&quot; + msg + &#39;\&#39;&#39; +</span></span>
+<span class="line"><span>                &#39;}&#39;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>TestMessage3</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package top.xinzhang0618.oa.amqp.demo;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import top.xinzhang0618.oa.amqp.Message;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * @author xinzhang</span></span>
+<span class="line"><span> * @date 2021/2/4 18:15</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class TestMessage3 extends Message {</span></span>
+<span class="line"><span>    private String msg;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String exchange() {</span></span>
+<span class="line"><span>        return super.exchange();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String routingKey() {</span></span>
+<span class="line"><span>        return &quot;oa.demo.test3.delay&quot;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public String getMsg() {</span></span>
+<span class="line"><span>        return msg;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    public void setMsg(String msg) {</span></span>
+<span class="line"><span>        this.msg = msg;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    @Override</span></span>
+<span class="line"><span>    public String toString() {</span></span>
+<span class="line"><span>        return &quot;TestMessage2{&quot; +</span></span>
+<span class="line"><span>                &quot;msg=&#39;&quot; + msg + &#39;\&#39;&#39; +</span></span>
+<span class="line"><span>                &#39;}&#39;;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="测试" tabindex="-1">测试 <a class="header-anchor" href="#测试" aria-label="Permalink to &quot;测试&quot;">​</a></h4><p>至此， 基础的配置都已完成，后续我们再来针对一个个功能点做分析， 先做简单的消息测试，配置完成后结构如下 <img src="/assets/1741671447582.CJsyg-BB.png" alt="1741671447582"> 启动消费者服务, 发送TestMessage1和TestMessage2, 两个消费者能够正常接收到消息并消费</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>@Test</span></span>
+<span class="line"><span>    public void test() {</span></span>
+<span class="line"><span>        TestMessage1 testMessage1 = new TestMessage1();</span></span>
+<span class="line"><span>        testMessage1.setMsg(&quot;这里是test1测试消息, 消息发送时间为: &quot; + LocalDateTime.now());</span></span>
+<span class="line"><span>        TestMessage2 testMessage2 = new TestMessage2();</span></span>
+<span class="line"><span>        testMessage2.setMsg(&quot;这里是test2测试消息, 消息发送时间为: &quot; + LocalDateTime.now());</span></span>
+<span class="line"><span>        producer.send(testMessage1);</span></span>
+<span class="line"><span>        producer.send(testMessage2);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>-----------------------------</span></span>
+<span class="line"><span>14:35:37.214 DEBUG [SimpleAsyncTaskExecutor-4] t.x.oa.consumer.AbstractConsumer - top.xinzhang0618.oa.consumer.Test1Consumer处理消息：TestMessage1{msg=&#39;这里是test1测试消息, 消息发送时间为: 2021-02-19T14:35:37.089&#39;}</span></span>
+<span class="line"><span>test1队列收到消息了, 消息内容为: {&quot;msg&quot;:&quot;这里是test1测试消息, 消息发送时间为: 2021-02-19T14:35:37.089&quot;}, 消息接收时间为: 2021-02-19T14:35:37.214</span></span>
+<span class="line"><span>14:35:37.214 DEBUG [SimpleAsyncTaskExecutor-5] t.x.oa.consumer.AbstractConsumer - top.xinzhang0618.oa.consumer.Test2Consumer处理消息：TestMessage2{msg=&#39;这里是test2测试消息, 消息发送时间为: 2021-02-19T14:35:37.089&#39;}</span></span>
+<span class="line"><span>test2队列收到消息了, 消息内容为: {&quot;msg&quot;:&quot;这里是test2测试消息, 消息发送时间为: 2021-02-19T14:35:37.089&quot;}, 消息接收时间为: 2021-02-19T14:35:37.214</span></span></code></pre></div><h3 id="消息的准确投递问题" tabindex="-1">消息的准确投递问题 <a class="header-anchor" href="#消息的准确投递问题" aria-label="Permalink to &quot;消息的准确投递问题&quot;">​</a></h3><p>oms参考方案如下: 消息全流程: 生产端--&gt;broker--&gt;消费端 ● 使用了applicationEvent取代mq事务来保证消息从生产端--&gt;broker的准确投递(若事务回滚则mq不会发送消息) ● 消费端若消费失败 ○ 利用手动ack对特定异常, 进行消息回队, 等待再次消费 ○ 利用定时器进行业务补偿, 比如因为缺货或并发导致配货失败, 会有&quot;缺货重配&quot;, &quot;定时扫表再次配货&quot;等定时任务</p><h3 id="发布者确认以及消费者应答" tabindex="-1">发布者确认以及消费者应答 <a class="header-anchor" href="#发布者确认以及消费者应答" aria-label="Permalink to &quot;发布者确认以及消费者应答&quot;">​</a></h3><p>参考文档: <a href="https://www.rabbitmq.com/confirms.html" target="_blank" rel="noreferrer">https://www.rabbitmq.com/confirms.html</a><a href="https://www.zhihu.com/question/41976893" target="_blank" rel="noreferrer">https://www.zhihu.com/question/41976893</a></p><p>发布者确认一般用于事务控制, 默认关闭, 这里没用到 消费者应答默认开启, 这里采用手动ack的方式 ack机制能灵活的控制消息的消费, 拒绝后可以选择性的删除或者重新入队, 比如oms中使用consumer ack来实现 &quot;如果消费端爆出版本异常(乐观锁), 则消息重新入队(后续再被消费), 其余情况则直接丢弃&quot; 这一功能</p><p>使用ack示例代码如下:</p><ol><li>先打开手动ack</li></ol><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);</span></span></code></pre></div><ol start="2"><li>在AbstractConsumer中针对特殊异常做处理</li></ol><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>package com.greatonce.oms.consumer;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>import com.greatonce.core.util.JsonUtil;</span></span>
+<span class="line"><span>import com.greatonce.oms.domain.OmsException;</span></span>
+<span class="line"><span>import com.greatonce.oms.domain.SysExceptions;</span></span>
+<span class="line"><span>import com.greatonce.oms.message.Message;</span></span>
+<span class="line"><span>import com.greatonce.oms.util.consumer.MessageListenerContainerManager;</span></span>
+<span class="line"><span>import com.rabbitmq.client.Channel;</span></span>
+<span class="line"><span>import java.io.IOException;</span></span>
+<span class="line"><span>import javax.annotation.PostConstruct;</span></span>
+<span class="line"><span>import org.slf4j.Logger;</span></span>
+<span class="line"><span>import org.slf4j.LoggerFactory;</span></span>
+<span class="line"><span>import org.springframework.beans.factory.annotation.Autowired;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>/**</span></span>
+<span class="line"><span> * 消息处理抽象类.</span></span>
+<span class="line"><span> *</span></span>
+<span class="line"><span> * @author ginta</span></span>
+<span class="line"><span> * @author Shenzhen Greatonce Co Ltd</span></span>
+<span class="line"><span> * @version 2018/3/23</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public abstract class AbstractConsumer {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractConsumer.class);</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  @Autowired</span></span>
+<span class="line"><span>  private MessageListenerContainerManager messageListenerContainerManager;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  @PostConstruct</span></span>
+<span class="line"><span>  protected void init() {</span></span>
+<span class="line"><span>    messageListenerContainerManager.registerContainer(containerId(), containerName());</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  protected abstract String containerId();</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  protected abstract String containerName();</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  protected &lt;T extends Message&gt; void run(T message, final Channel channel, long tag,</span></span>
+<span class="line"><span>      Runnable runnable) throws IOException {</span></span>
+<span class="line"><span>    try {</span></span>
+<span class="line"><span>      if (LOGGER.isDebugEnabled()) {</span></span>
+<span class="line"><span>        LOGGER.debug(&quot;{}处理消息：{}&quot;, this.getClass().getName(), message);</span></span>
+<span class="line"><span>      }</span></span>
+<span class="line"><span>      runnable.run();</span></span>
+<span class="line"><span>      channel.basicAck(tag, false);</span></span>
+<span class="line"><span>    } catch (OmsException e) {</span></span>
+<span class="line"><span>      LOGGER.error(&quot;消息处理异常！{},{},{}&quot;, this.getClass().getName(), JsonUtil.toJson(message), e.getMessage());</span></span>
+<span class="line"><span>      LOGGER.error(&quot;消息处理异常！&quot;, e);</span></span>
+<span class="line"><span>      if (SysExceptions.VERSION_CHANGED.equals(e.getMessage())</span></span>
+<span class="line"><span>          || SysExceptions.MALL_SECURITY_API_ERROR.equals(e.getMessage())) {</span></span>
+<span class="line"><span>        channel.basicReject(tag, true);</span></span>
+<span class="line"><span>      } else {</span></span>
+<span class="line"><span>        channel.basicReject(tag, false);</span></span>
+<span class="line"><span>      }</span></span>
+<span class="line"><span>    } catch (Exception e) {</span></span>
+<span class="line"><span>      LOGGER.error(&quot;消息处理异常！{},{}&quot;, this.getClass().getName(), JsonUtil.toJson(message));</span></span>
+<span class="line"><span>      LOGGER.error(&quot;消息处理异常！&quot;, e);</span></span>
+<span class="line"><span>      channel.basicReject(tag, false);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>basicReject与basicNack方法区别: basicReject：是接收端告诉服务器这个消息我拒绝接收,不处理,可以设置是否放回到队列中还是丢掉，而且只能一次拒绝一个消息,官网中有明确说明不能批量拒绝消息，为解决批量拒绝消息才有了basicNack。 basicNack：可以一次拒绝N条消息，客户端可以设置basicNack方法的multiple参数为true，服务器会拒绝指定了delivery_tag的所有未确认的消息.</p><p>DeliveryTag作用: 对于每个Channel来说，每个消息都会有一个DeliveryTag，一般用接收消息的顺序来表示：1,2,3,4 等等</p><h3 id="消息的优先级" tabindex="-1">消息的优先级 <a class="header-anchor" href="#消息的优先级" aria-label="Permalink to &quot;消息的优先级&quot;">​</a></h3><p>只有在消费端消息堆积的时候才有效果, 不然也没卵用, 比如oms中转化队列配置了&quot;下载的销售单&quot;比&quot;从第三方系统同步的销售单&quot;更优先进行转化</p><p>使用示例:</p><ol><li>先设置队列的优先级, 表示能容纳的消息的最大优先级, 数字越大越优先</li></ol><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span> @Bean</span></span>
+<span class="line"><span>  public Queue salesTranslateQueue() {</span></span>
+<span class="line"><span>    return QueueBuilder</span></span>
+<span class="line"><span>        .durable(QUEUE_TRADE_SALES_ORDER_TRANSLATE)</span></span>
+<span class="line"><span>        .withArgument(&quot;x-max-priority&quot;, 2)</span></span>
+<span class="line"><span>        .build();</span></span>
+<span class="line"><span>  }</span></span></code></pre></div><ol start="2"><li>然后设置消息的优先级</li></ol><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>/**</span></span>
+<span class="line"><span> * 销售单从第三方系统同步消息.</span></span>
+<span class="line"><span> *</span></span>
+<span class="line"><span> * @author ginta</span></span>
+<span class="line"><span> * @author Shenzhen Greatonce Co Ltd</span></span>
+<span class="line"><span> * @version 2018/3/7</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class MallSalesOrderSynchronizedMessage extends MallSalesOrderMessage {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  public MallSalesOrderSynchronizedMessage(Long mallSalesOrderId, Long storeId, String tradeId) {</span></span>
+<span class="line"><span>    super(mallSalesOrderId, storeId, tradeId,&quot;synchronized&quot;);</span></span>
+<span class="line"><span>    this.setPriority(1);</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>/**</span></span>
+<span class="line"><span> * 销售单已下载消息.</span></span>
+<span class="line"><span> *</span></span>
+<span class="line"><span> * @author ginta</span></span>
+<span class="line"><span> * @author Shenzhen Greatonce Co Ltd</span></span>
+<span class="line"><span> * @version 2018/3/7</span></span>
+<span class="line"><span> */</span></span>
+<span class="line"><span>public class MallSalesOrderDownloadMessage extends MallSalesOrderMessage {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  public MallSalesOrderDownloadMessage(Long mallSalesOrderId, Long storeId, String tradeId) {</span></span>
+<span class="line"><span>    super(mallSalesOrderId, storeId, tradeId,&quot;download&quot;);</span></span>
+<span class="line"><span>    this.setPriority(2);</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><ol start="3"><li>在配置上, 上面的RabbitMqProducer示例代码中已经将priority属性设置进MessageProperties了</li></ol><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span> rabbitTemplate.convertAndSend(message.exchange(), message.routingKey(), message, msg -&gt; {</span></span>
+<span class="line"><span>                if (message.getPriority() != null) {</span></span>
+<span class="line"><span>                    msg.getMessageProperties().setPriority(message.getPriority());</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                if (message.getDelayMinutes() != null) {</span></span>
+<span class="line"><span>                    msg.getMessageProperties().setDelay(1000 * 60 * message.getDelayMinutes());</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                return msg;</span></span>
+<span class="line"><span>            });</span></span></code></pre></div><h3 id="延迟消息" tabindex="-1">延迟消息 <a class="header-anchor" href="#延迟消息" aria-label="Permalink to &quot;延迟消息&quot;">​</a></h3><p>利用队列的ttl以及死信队列实现 前言 这里也可以利用消息的ttl实现, 需要设置消息的expiration属性 补充: 当队列和消息同时有过期时间时, 更短的一个会生效</p><p>但有个严重问题是, 消息会在队列进行排队顺序消费, 若前一消息的ttl大于后一消息, 则后一消息到期后依然要等到前面消息消费完 比如按顺序发送&quot;2min过期的消息&quot;, &quot;1min过期的消息&quot;, 消费端会在2min后一起消费这两条消息, 因此在示例项目的配置中(message的封装上, rabbitmqProducer的封装上), 我完全摈弃了消息的ttl这一特性</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span> if (this.delayMinutes != null) {</span></span>
+<span class="line"><span>        int delayTimemillis = 1000 * 60 * this.delayMinutes;</span></span>
+<span class="line"><span>        if (delayType == DelayType.EXCHANGE) {</span></span>
+<span class="line"><span>          message.getMessageProperties().setDelay(delayTimemillis);</span></span>
+<span class="line"><span>        } else {</span></span>
+<span class="line"><span>          message.getMessageProperties().setExpiration(String.valueOf(delayTimemillis));</span></span>
+<span class="line"><span>        }</span></span>
+<span class="line"><span>      }</span></span></code></pre></div><p>使用流程 这一方案, 可以参考上面test3DelayQueue的配置, 这个队列10分钟过期, 没有消费者 消息过期后, 会由&quot;x-dead-letter-exchange&quot;通过&quot;x-dead-letter-routing-key&quot;将消息转发出去, 队列配置如下 因此使用示例: 发送消息到test3DelayQueue队列, 过10分钟后消息过期转发到路由oa.demo.test1, 然后Test1Consumer消费, 实现了消息延迟10分钟消费</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>/**</span></span>
+<span class="line"><span>     * 测试3延时队列, 延迟10min</span></span>
+<span class="line"><span>     * 这个队列没有消费者, 消息过期后由死信交换机demo转发至oa.demo.test1</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Queue test3DelayQueue() {</span></span>
+<span class="line"><span>        return QueueBuilder</span></span>
+<span class="line"><span>                .durable(MqConstants.QUEUE_TEST3_DELAY)</span></span>
+<span class="line"><span>                .withArgument(&quot;x-dead-letter-exchange&quot;, MqConstants.EXCHANGE_DEMO)</span></span>
+<span class="line"><span>                .withArgument(&quot;x-dead-letter-routing-key&quot;, MqConstants.QUEUE_TEST1_BINDING_KEY)</span></span>
+<span class="line"><span>                .withArgument(&quot;x-message-ttl&quot;, 1000 * 60 * 10)</span></span>
+<span class="line"><span>                .build();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    /**</span></span>
+<span class="line"><span>     * 测试3延时队列 绑定 demo交换机, routingKey: oms.demo.test3.delay</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Binding test3DelayQueueBindingDemoExchange(@Qualifier(&quot;demoExchange&quot;) Exchange demoExchange,</span></span>
+<span class="line"><span>                                                      @Qualifier(&quot;test3DelayQueue&quot;) Queue test3DelayQueue) {</span></span>
+<span class="line"><span>        return BindingBuilder</span></span>
+<span class="line"><span>                .bind(test3DelayQueue)</span></span>
+<span class="line"><span>                .to(demoExchange)</span></span>
+<span class="line"><span>                .with(MqConstants.QUEUE_TEST3_DELAY_BINDING_KEY)</span></span>
+<span class="line"><span>                .noargs();</span></span>
+<span class="line"><span>    }</span></span></code></pre></div><p>从管理界面上也能看到各个标签, 鼠标挪到标签上会有信息显示 <img src="/assets/1741671806956.BRMMyDPo.png" alt="1741671806956"></p><h4 id="利用死信交换机插件实现" tabindex="-1">利用死信交换机插件实现 <a class="header-anchor" href="#利用死信交换机插件实现" aria-label="Permalink to &quot;利用死信交换机插件实现&quot;">​</a></h4><p>这一实现更加简单, 安装并启用插件后, 声明交换机的delay属性 一个消息变成死信的条件有： 1.消费被拒绝（basic.reject 或者 basic.nack），并且参数 requeue = false 时 2.消息TTL（存活时间）过期 3.队列达到最大长度 rabbitMQ对于死信消息的处理是：如果配置了死信队列，成为死信的消息会被丢进死信队列，如果没有则被丢弃。</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>/**</span></span>
+<span class="line"><span>     * 示例交换机</span></span>
+<span class="line"><span>     */</span></span>
+<span class="line"><span>    @Bean</span></span>
+<span class="line"><span>    public Exchange demoExchange() {</span></span>
+<span class="line"><span>        return ExchangeBuilder.topicExchange(MqConstants.EXCHANGE_DEMO).delayed().build();</span></span>
+<span class="line"><span>    }</span></span></code></pre></div><p>管理界面也能看到交换机类型变为&quot;x-delayed-message&quot; <img src="/assets/1741671841682.CjFaIg3A.png" alt="1741671841682"> 给消息设置一定的延迟时间, 这里也要注意是消息的&quot;x-delay&quot;属性 交换机会等待delay的时间, 然后再将消息转发到对应的队列中</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>rabbitTemplate.convertAndSend(message.exchange(), message.routingKey(), message, msg -&gt; {</span></span>
+<span class="line"><span>                if (message.getPriority() != null) {</span></span>
+<span class="line"><span>                    msg.getMessageProperties().setPriority(message.getPriority());</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                if (message.getDelayMinutes() != null) {</span></span>
+<span class="line"><span>                    msg.getMessageProperties().setDelay(1000 * 60 * message.getDelayMinutes());</span></span>
+<span class="line"><span>                }</span></span>
+<span class="line"><span>                return msg;</span></span>
+<span class="line"><span>            });</span></span></code></pre></div><p>测试如下</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>@Test</span></span>
+<span class="line"><span>    public void testSimpleConsume() {</span></span>
+<span class="line"><span>        TestMessage1 testMessage1 = new TestMessage1();</span></span>
+<span class="line"><span>        testMessage1.setDelayMinutes(1);</span></span>
+<span class="line"><span>        testMessage1.setMsg(&quot;这里是test1测试消息, 消息发送时间为: &quot; + LocalDateTime.now());</span></span>
+<span class="line"><span>        producer.send(testMessage1);</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>-------------------</span></span>
+<span class="line"><span>16:02:33.276 DEBUG [SimpleAsyncTaskExecutor-5] t.x.oa.consumer.AbstractConsumer - top.xinzhang0618.oa.consumer.Test1Consumer处理消息：TestMessage1{msg=&#39;这里是test1测试消息, 消息发送时间为: 2021-02-19T16:01:33.152&#39;}</span></span>
+<span class="line"><span>test1队列收到消息了, 消息内容为: {&quot;msg&quot;:&quot;这里是test1测试消息, 消息发送时间为: 2021-02-19T16:01:33.152&quot;,&quot;delayMinutes&quot;:1}, 消息接收时间为: 2021-02-19T16:02:33.276</span></span></code></pre></div><h3 id="灵活控制消费者开启关闭" tabindex="-1">灵活控制消费者开启关闭 <a class="header-anchor" href="#灵活控制消费者开启关闭" aria-label="Permalink to &quot;灵活控制消费者开启关闭&quot;">​</a></h3><p>自定义注解 通过自定义注解能开启或关闭单个消费者, 由配置文件控制, 更改需要重启应用</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>import java.lang.annotation.Documented;</span></span>
+<span class="line"><span>import java.lang.annotation.ElementType;</span></span>
+<span class="line"><span>import java.lang.annotation.Retention;</span></span>
+<span class="line"><span>import java.lang.annotation.RetentionPolicy;</span></span>
+<span class="line"><span>import java.lang.annotation.Target;</span></span>
+<span class="line"><span>import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@Target({ElementType.TYPE, ElementType.METHOD})</span></span>
+<span class="line"><span>@Retention(RetentionPolicy.RUNTIME)</span></span>
+<span class="line"><span>@Documented</span></span>
+<span class="line"><span>@ConditionalOnProperty(name = &quot;oms.consumer.dispatch.enabled&quot;, havingValue = &quot;true&quot;)</span></span>
+<span class="line"><span>public @interface DispatchOrderCondition {</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>}</span></span></code></pre></div><h4 id="监听容器开关" tabindex="-1">监听容器开关 <a class="header-anchor" href="#监听容器开关" aria-label="Permalink to &quot;监听容器开关&quot;">​</a></h4><p>根据业务区分不同的监听容器, 个业务组下的交换机注册到各监听容器中, 通过http请求方式直接关闭开启监听容器</p></div></div></main><footer class="VPDocFooter" data-v-83890dd9 data-v-4f9813fa><!--[--><!--]--><!----><nav class="prev-next" aria-labelledby="doc-footer-aria-label" data-v-4f9813fa><span class="visually-hidden" id="doc-footer-aria-label" data-v-4f9813fa>Pager</span><div class="pager" data-v-4f9813fa><a class="VPLink link pager-link prev" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0401-RabbitMQ/040102-RabbitMQ%E5%9F%BA%E7%A1%80(%E4%BA%8C).html" data-v-4f9813fa><!--[--><span class="desc" data-v-4f9813fa>Previous page</span><span class="title" data-v-4f9813fa>RabbitMQ基础(二)</span><!--]--></a></div><div class="pager" data-v-4f9813fa><a class="VPLink link pager-link next" href="/04-%E7%BC%93%E5%AD%98%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/0402-RocketMQ/040201-RockectMQ%E5%9F%BA%E7%A1%80.html" data-v-4f9813fa><!--[--><span class="desc" data-v-4f9813fa>Next page</span><span class="title" data-v-4f9813fa>RockectMQ基础</span><!--]--></a></div></nav></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><footer class="VPFooter has-sidebar" data-v-a9a9e638 data-v-c970a860><div class="container" data-v-c970a860><p class="message" data-v-c970a860>Released under the MIT License.</p><p class="copyright" data-v-c970a860>Copyright © 2019-present Evan You</p></div></footer><!--[--><!--]--></div></div>
+    <script>window.__VP_HASH_MAP__=JSON.parse("{\"02-java语言基础_0201-java核心知识点_020101-java语言基础.md\":\"2LaDXLlV\",\"02-java语言基础_0201-java核心知识点_020102-io模型.md\":\"DAX2K8ny\",\"02-java语言基础_0201-java核心知识点_020103-集合.md\":\"51geJFUl\",\"02-java语言基础_0203-jvm_020301-jvm基础.md\":\"Hd7fn0ef\",\"03-数据库与持久化_0301-关系型数据库_030101-powerdesign简易教程.md\":\"vvFcUI9n\",\"03-数据库与持久化_0301-关系型数据库_030102-索引.md\":\"CkB9vihn\",\"03-数据库与持久化_0301-关系型数据库_030103-mysql基础.md\":\"CZyoCuTM\",\"04-缓存与中间件_0401-rabbitmq_040101-rabbitmq基础(一).md\":\"CgiegB5p\",\"04-缓存与中间件_0401-rabbitmq_040102-rabbitmq基础(二).md\":\"D54JLOba\",\"04-缓存与中间件_0401-rabbitmq_040103-rabbitmq实践.md\":\"CMlEeHBf\",\"04-缓存与中间件_0402-rocketmq_040201-rockectmq基础.md\":\"uvO_efGQ\",\"04-缓存与中间件_0403-redis_040301-_案例_智能体session设计.md\":\"BKrwxVZc\",\"05-微服务与分布式系统_0501-微服务_050101-ratelimiter.md\":\"CDdyfCpi\",\"05-微服务与分布式系统_0501-微服务_050102-filter_interceptor_aspect使用场景.md\":\"dK-7BT2t\",\"05-微服务与分布式系统_0502-分布式_050201-分布式理论.md\":\"D0BHhudP\",\"05-微服务与分布式系统_0502-分布式_050202-服务注册与发现.md\":\"BCbYaZUl\",\"05-微服务与分布式系统_0502-分布式_050203-客户端负载均衡.md\":\"DzHh0QTY\",\"05-微服务与分布式系统_0502-分布式_050204-服务容错保护.md\":\"DTt99BAu\",\"05-微服务与分布式系统_0502-分布式_050205-声明式服务调用.md\":\"BrJRPbiI\",\"05-微服务与分布式系统_0502-分布式_050206-api网关服务.md\":\"DQrocUKi\",\"05-微服务与分布式系统_0502-分布式_050207-分布式配置中心.md\":\"q782_k0X\",\"05-微服务与分布式系统_0502-分布式_050208-分布式链路追踪.md\":\"BrmrxkGm\",\"05-微服务与分布式系统_0502-分布式_050209-阿里微服务治理技术白皮书.md\":\"CTizuUYS\",\"06-架构设计与开发规范_0601-设计模式_060101-面向对象与设计原则.md\":\"B_T3MqNt\",\"06-架构设计与开发规范_0601-设计模式_060102-规范与重构.md\":\"Dx9QWG9t\",\"06-架构设计与开发规范_0601-设计模式_060103-设计模式-创建型.md\":\"Dinn36Y9\",\"06-架构设计与开发规范_0601-设计模式_060104-设计模式-结构型.md\":\"Cj8lNu9E\",\"06-架构设计与开发规范_0601-设计模式_060105-设计模式-行为型(上).md\":\"BLSD2WQA\",\"06-架构设计与开发规范_0601-设计模式_060106-设计模式-行为型(下).md\":\"9PPsMNWg\",\"06-架构设计与开发规范_0603-业务建模_060301-业务建模基础.md\":\"BSAXnu6t\",\"08-前沿技术与扩展领域_0801-人工智能_080101-gpt原理.md\":\"D7r6GSaq\",\"08-前沿技术与扩展领域_0801-人工智能_080102-rag优化.md\":\"CHDVL3xe\",\"09-实战与问题排查_0901-微服务配置热刷后无法处理请求问题.md\":\"BPuuGPUJ\",\"09-实战与问题排查_0902-信长博客站搭建.md\":\"yJCzGUmx\",\"10-其他_参考资料.md\":\"1qVGrptJ\",\"10-其他_里程碑.md\":\"DygtL3IK\",\"11-杂学_1101-羽毛球练习心得.md\":\"VaKzIc_C\",\"11-杂学_1102-芯片.md\":\"CMc6ZlDe\",\"11-杂学_1103-信长厨房.md\":\"D1MAiayU\",\"index.md\":\"CS3bujQA\",\"介绍.md\":\"CDDqEeWr\",\"关于我.md\":\"CuG7octB\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"信长笔记2.0\",\"description\":\"信长笔记2.0\",\"base\":\"/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"logo\":\"/avatar.jpg\",\"search\":{\"provider\":\"local\"},\"nav\":[{\"text\":\"首页\",\"link\":\"/\"},{\"text\":\"关于我\",\"link\":\"/关于我\"}],\"sidebar\":[{\"text\":\"计算机基础\",\"items\":[]},{\"text\":\"Java语言基础\",\"items\":[{\"text\":\"Java核心知识点\",\"collapsed\":true,\"items\":[{\"text\":\"Java语言基础\",\"link\":\"/02-Java语言基础/0201-Java核心知识点/020101-Java语言基础\"},{\"text\":\"IO模型\",\"link\":\"/02-Java语言基础/0201-Java核心知识点/020102-IO模型\"},{\"text\":\"集合\",\"link\":\"/02-Java语言基础/0201-Java核心知识点/020103-集合\"}]},{\"text\":\"JVM\",\"collapsed\":true,\"items\":[{\"text\":\"JVM基础\",\"link\":\"/02-Java语言基础/0203-JVM/020301-JVM基础\"}]}]},{\"text\":\"数据库与持久化\",\"items\":[{\"text\":\"关系型数据库\",\"collapsed\":true,\"items\":[{\"text\":\"PowerDesign简易教程\",\"link\":\"/03-数据库与持久化/0301-关系型数据库/030101-PowerDesign简易教程\"},{\"text\":\"索引\",\"link\":\"/03-数据库与持久化/0301-关系型数据库/030102-索引\"},{\"text\":\"MySQL基础\",\"link\":\"/03-数据库与持久化/0301-关系型数据库/030103-MySQL基础\"}]}]},{\"text\":\"缓存与中间件\",\"items\":[{\"text\":\"RabbitMQ\",\"collapsed\":true,\"items\":[{\"text\":\"RabbitMQ基础(一)\",\"link\":\"/04-缓存与中间件/0401-RabbitMQ/040101-RabbitMQ基础(一)\"},{\"text\":\"RabbitMQ基础(二)\",\"link\":\"/04-缓存与中间件/0401-RabbitMQ/040102-RabbitMQ基础(二)\"},{\"text\":\"RabbitMQ实践\",\"link\":\"/04-缓存与中间件/0401-RabbitMQ/040103-RabbitMQ实践\"}]},{\"text\":\"RocketMQ\",\"collapsed\":true,\"items\":[{\"text\":\"RockectMQ基础\",\"link\":\"/04-缓存与中间件/0402-RocketMQ/040201-RockectMQ基础\"}]},{\"text\":\"Redis\",\"collapsed\":true,\"items\":[{\"text\":\"[案例]智能体session设计\",\"link\":\"/04-缓存与中间件/0403-Redis/040301-[案例]智能体session设计\"}]}]},{\"text\":\"微服务与分布式系统\",\"items\":[{\"text\":\"微服务\",\"collapsed\":true,\"items\":[{\"text\":\"RateLimiter\",\"link\":\"/05-微服务与分布式系统/0501-微服务/050101-RateLimiter\"},{\"text\":\"Filter&Interceptor&Aspect使用场景\",\"link\":\"/05-微服务与分布式系统/0501-微服务/050102-Filter&Interceptor&Aspect使用场景\"}]},{\"text\":\"分布式\",\"collapsed\":true,\"items\":[{\"text\":\"分布式理论\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050201-分布式理论\"},{\"text\":\"服务注册与发现\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050202-服务注册与发现\"},{\"text\":\"客户端负载均衡\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050203-客户端负载均衡\"},{\"text\":\"服务容错保护\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050204-服务容错保护\"},{\"text\":\"声明式服务调用\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050205-声明式服务调用\"},{\"text\":\"API网关服务\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050206-API网关服务\"},{\"text\":\"分布式配置中心\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050207-分布式配置中心\"},{\"text\":\"分布式链路追踪\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050208-分布式链路追踪\"},{\"text\":\"阿里微服务治理技术白皮书\",\"link\":\"/05-微服务与分布式系统/0502-分布式/050209-阿里微服务治理技术白皮书\"}]}]},{\"text\":\"架构设计与开发规范\",\"items\":[{\"text\":\"设计模式\",\"collapsed\":true,\"items\":[{\"text\":\"面向对象与设计原则\",\"link\":\"/06-架构设计与开发规范/0601-设计模式/060101-面向对象与设计原则\"},{\"text\":\"规范与重构\",\"link\":\"/06-架构设计与开发规范/0601-设计模式/060102-规范与重构\"},{\"text\":\"设计模式-创建型\",\"link\":\"/06-架构设计与开发规范/0601-设计模式/060103-设计模式-创建型\"},{\"text\":\"设计模式-结构型\",\"link\":\"/06-架构设计与开发规范/0601-设计模式/060104-设计模式-结构型\"},{\"text\":\"设计模式-行为型(上)\",\"link\":\"/06-架构设计与开发规范/0601-设计模式/060105-设计模式-行为型(上)\"},{\"text\":\"设计模式-行为型(下)\",\"link\":\"/06-架构设计与开发规范/0601-设计模式/060106-设计模式-行为型(下)\"}]},{\"text\":\"业务建模\",\"collapsed\":true,\"items\":[{\"text\":\"业务建模基础\",\"link\":\"/06-架构设计与开发规范/0603-业务建模/060301-业务建模基础\"}]}]},{\"text\":\"开发工具与DevOps\",\"items\":[]},{\"text\":\"前沿技术与扩展领域\",\"items\":[{\"text\":\"人工智能\",\"collapsed\":true,\"items\":[{\"text\":\"GPT原理\",\"link\":\"/08-前沿技术与扩展领域/0801-人工智能/080101-GPT原理\"},{\"text\":\"RAG优化\",\"link\":\"/08-前沿技术与扩展领域/0801-人工智能/080102-RAG优化\"}]}]},{\"text\":\"实战与问题排查\",\"items\":[{\"text\":\"微服务配置热刷后无法处理请求问题\",\"link\":\"/09-实战与问题排查/0901-微服务配置热刷后无法处理请求问题\"},{\"text\":\"信长博客站搭建\",\"link\":\"/09-实战与问题排查/0902-信长博客站搭建\"}]},{\"text\":\"其他\",\"items\":[{\"text\":\"\",\"link\":\"/10-其他/参考资料\"},{\"text\":\"\",\"link\":\"/10-其他/里程碑\"}]},{\"text\":\"杂学\",\"items\":[{\"text\":\"羽毛球练习心得\",\"link\":\"/11-杂学/1101-羽毛球练习心得\"},{\"text\":\"芯片\",\"link\":\"/11-杂学/1102-芯片\"},{\"text\":\"信长厨房\",\"link\":\"/11-杂学/1103-信长厨房\"}]},{\"text\":\"\",\"items\":[]}],\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/vuejs/vitepress\"}],\"footer\":{\"message\":\"Released under the MIT License.\",\"copyright\":\"Copyright © 2019-present Evan You\"}},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
+    
+  </body>
+</html>
