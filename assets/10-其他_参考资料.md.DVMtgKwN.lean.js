@@ -1,0 +1,1 @@
+import{_ as a,c as t,o as r,ag as n}from"./chunks/framework.CP8pidWN.js";const p=JSON.parse('{"title":"参考资料","description":"","frontmatter":{},"headers":[],"relativePath":"10-其他/参考资料.md","filePath":"10-其他/参考资料.md"}'),o={name:"10-其他/参考资料.md"};function i(h,e,_,l,d,s){return r(),t("div",null,e[0]||(e[0]=[n("",3)]))}const u=a(o,[["render",i]]);export{p as __pageData,u as default};
